@@ -1,0 +1,69 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net8.0-windows;net10.0-windows</TargetFrameworks>
+    <OutputType>Library</OutputType>
+    <RootNamespace>AreaBoundaryCleanup</RootNamespace>
+    <AssemblyName>AreaBoundaryCleanup</AssemblyName>    
+    <UseWindowsForms>true</UseWindowsForms>
+    <UseWPF>true</UseWPF>
+    <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)'=='net8.0-windows'">
+    <OutputPath>C:\Users\aecso\AppData\Roaming\Autodesk\Revit\Addins\2025\AreaBoundaryCleanup.bundle\Contents\2025\DLLs\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(TargetFramework)'=='net10.0-windows'">
+    <OutputPath>C:\Users\aecso\AppData\Roaming\Autodesk\Revit\Addins\2027\AreaBoundaryCleanup.bundle\Contents\2027\DLLs\</OutputPath>
+  </PropertyGroup>
+  
+  <PropertyGroup>
+    <IncludeAllLocales>false</IncludeAllLocales>
+    <InvariantGlobalization>false</InvariantGlobalization>
+    <PackageOutputPath>$(OutputPath)</PackageOutputPath>
+  </PropertyGroup>
+  
+  <ItemGroup Condition="'$(TargetFramework)'=='net8.0-windows'">
+    <Reference Include="RevitAPI">
+      <HintPath>C:\Program Files\Autodesk\Revit 2025\RevitAPI.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="RevitAPIUI">
+      <HintPath>C:\Program Files\Autodesk\Revit 2025\RevitAPIUI.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+   </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)'=='net10.0-windows'">
+    <Reference Include="RevitAPI">
+      <HintPath>C:\Program Files\Autodesk\Revit 2027\RevitAPI.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="RevitAPIUI">
+      <HintPath>C:\Program Files\Autodesk\Revit 2027\RevitAPIUI.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Images\Areaberakning.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Resource.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resource.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resource.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resource.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>  
+  
+</Project>
