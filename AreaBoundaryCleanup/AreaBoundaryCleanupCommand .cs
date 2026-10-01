@@ -45,6 +45,8 @@ namespace AreaBoundaryCleanup
             UIDocument uidoc = commandData.Application.ActiveUIDocument; 
             Document doc = uidoc.Document;
 
+            PrintString();
+
             try
             {
                 CleanupOptions options = CleanupOptionsWindow.ShowDialogWindow();
@@ -71,14 +73,21 @@ namespace AreaBoundaryCleanup
                 }
 
                 CleanupEngine.ShowReport(report);
+
                 return Result.Succeeded;
             }
             catch (Exception ex)
             {
                 message = ex.Message;
                 Autodesk.Revit.UI.TaskDialog.Show("Error", $"Cleanup failed:\n{ex.Message}\n\n{ex.StackTrace}");
+
                 return Result.Failed;
             }
+        }
+
+        private static void PrintString()
+        {
+            System.Windows.Forms.MessageBox.Show("PrintString");
         }
     }
 
@@ -138,12 +147,14 @@ namespace AreaBoundaryCleanup
                 }
 
                 CleanupEngine.ShowReport(report);
+
                 return Result.Succeeded;
             }
             catch (Exception ex)
             {
                 message = ex.Message;
                 Autodesk.Revit.UI.TaskDialog.Show("Error", $"Cleanup failed:\n{ex.Message}\n\n{ex.StackTrace}");
+
                 return Result.Failed;
             }
         }
@@ -194,6 +205,7 @@ namespace AreaBoundaryCleanup
             foreach (var line in lines)
             {
                 ElementId levelId = GetAssociatedLevelId(line);
+
                 if (!grouped.ContainsKey(levelId))
                     grouped[levelId] = new List<CurveElement>();
 
@@ -336,11 +348,13 @@ namespace AreaBoundaryCleanup
             XYZ dirB = b.Direction.Normalize();
 
             double dot = Math.Abs(dirA.DotProduct(dirB));
+
             if (dot < 0.9999) return false;
 
             XYZ a1 = a.GetEndPoint(0);
             XYZ toB1 = b.GetEndPoint(0) - a1;
             XYZ cross = dirA.CrossProduct(toB1);
+
             if (cross.GetLength() > 0.01) return false;
 
             double tB1 = dirA.DotProduct(b.GetEndPoint(0) - a1);
@@ -378,15 +392,19 @@ namespace AreaBoundaryCleanup
             for (int i = 0; i < endpoints.Count; i++)
             {
                 var (idA, idxA, ptA, curveA) = endpoints[i];
+
                 if (processed.Contains((idA, idxA))) continue;
 
                 for (int j = i + 1; j < endpoints.Count; j++)
                 {
                     var (idB, idxB, ptB, curveB) = endpoints[j];
+
                     if (idA == idB) continue;
+
                     if (processed.Contains((idB, idxB))) continue;
 
                     double dist = ptA.DistanceTo(ptB);
+
                     if (dist > 1e-6 && dist <= tol)
                     {
                         XYZ targetPoint = ComputeIntersectionPoint(curveA, idxA, ptA, curveB, idxB, ptB, maxExtension)
@@ -432,6 +450,7 @@ namespace AreaBoundaryCleanup
             // Coplanarity check: (ptB - ptA) should lie in the plane spanned by dirA/dirB
             XYZ w = ptB - ptA;
             double planarity = Math.Abs(w.DotProduct(cross.Normalize()));
+
             if (planarity > 0.01) return null; // not coplanar enough to trust a 3D intersection
 
             // Solve for t where ptA + t*dirA meets the line through ptB with direction dirB
@@ -464,6 +483,7 @@ namespace AreaBoundaryCleanup
                 double param = endIndex == 1 ? curve.GetEndParameter(1) : curve.GetEndParameter(0);
                 Transform derivatives = curve.ComputeDerivatives(param, false);
                 XYZ tangent = derivatives.BasisX.Normalize();
+
                 return endIndex == 1 ? tangent : tangent.Negate();
             }
 
@@ -703,6 +723,6 @@ namespace AreaBoundaryCleanup
             return double.TryParse(text, NumberStyles.Float, CultureInfo.InvariantCulture, out double val)
                 ? val
                 : fallback;
-        }
+        }        
     }
 }
