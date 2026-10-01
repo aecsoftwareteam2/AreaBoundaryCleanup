@@ -87,7 +87,7 @@ namespace AreaBoundaryCleanup
 
         private static void PrintString()
         {
-            System.Windows.Forms.MessageBox.Show("PrintString");
+            System.Windows.Forms.MessageBox.Show("PrintString AreaBoundaryCleanupCommand 2");
         }
     }
 
